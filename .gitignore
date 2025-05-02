@@ -1,0 +1,35 @@
+# Ignore datasets and large image folders
+64 Images from doctor /
+Aug_dataset_cor_arteries/
+64 Images from doctor /Augmented_image
+
+
+# Ignore fine-tuned model directories
+fine_tuned_sam2_hiera_b+/
+fine_tuned_sam2_hiera_l/
+fine_tuned_sam2_hiera_s/
+fine_tuned_sam2_hiera_t/
+
+# Ignore results and experiment directories
+results/
+SAM2_Hiera_b+_PEFT_nb/
+SAM2_Hiera_l_PEFT_nb/
+SAM2_Hiera_s_PEFT_nb/
+SAM2_Hiera_t_PEFT_nb/
+
+# Ignore downloaded model/code repositories
+segment-anything-2/
+
+# Ignore PyTorch checkpoints
+*.pt
+
+# Ignore zip archives
+*.zip
+
+# Add other common ignores if needed (e.g., Python cache)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.ipynb_checkpoints

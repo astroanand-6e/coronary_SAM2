@@ -1,0 +1,2 @@
+model_checkpoint,average_accuracy,average_iou,average_dice,average_sensitivity,average_precision
+cor_fine_tuned_tiny_sam2_epoch_5.pt,0.962060,0.719066,0.829863,0.886644,0.784974

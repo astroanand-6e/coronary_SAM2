@@ -70,6 +70,8 @@ def apply_clahe(image_uint8):
     is_color = len(image_uint8.shape) == 3
 
     # --- ADJUST CLAHE STRENGTH HERE ---
+    # Lower clipLimit reduces the contrast enhancement effect.
+    # Original was 2.0. Try values like 1.5, 1.0, or even disable by setting it very low.
     clahe_clip_limit = 2.0 
     clahe_tile_grid_size = (8, 8)
     print(f" Applying CLAHE with clipLimit={clahe_clip_limit}, tileGridSize={clahe_tile_grid_size}")
@@ -78,51 +80,20 @@ def apply_clahe(image_uint8):
     clahe = cv2.createCLAHE(clipLimit=clahe_clip_limit, tileGridSize=clahe_tile_grid_size)
 
     if is_color:
-        # Apply CLAHE to each channel separately (same as in training)
-        enhanced = np.zeros_like(image_uint8, dtype=np.uint8)
-        for i in range(image_uint8.shape[2]):
-            enhanced[:,:,i] = clahe.apply(image_uint8[:,:,i])
-        return enhanced
+        lab = cv2.cvtColor(image_uint8, cv2.COLOR_RGB2LAB)
+        l, a, b = cv2.split(lab)
+        l_clahe = clahe.apply(l)
+        lab_clahe = cv2.merge((l_clahe, a, b))
+        clahe_image_uint8 = cv2.cvtColor(lab_clahe, cv2.COLOR_LAB2RGB)
     else:
-        return clahe.apply(image_uint8)
+         clahe_image_uint8 = clahe.apply(image_uint8)
 
-def apply_zscore_normalization(image):
-    """Apply Z-score normalization (zero mean and unit variance) as done in training."""
-    if image is None: return None
-    
-    # Convert to float32 for calculations
-    image = image.astype(np.float32)
-    
-    # Apply z-score normalization to each channel if color image
-    if len(image.shape) == 3:
-        normalized = np.zeros_like(image, dtype=np.float32)
-        for i in range(image.shape[2]):
-            channel = image[:,:,i]
-            mean = np.mean(channel)
-            std = np.std(channel) + 1e-6  # Add small value to prevent division by zero
-            normalized[:,:,i] = (channel - mean) / std
-    else:
-        mean = np.mean(image)
-        std = np.std(image) + 1e-6
-        normalized = (image - mean) / std
-    
-    return normalized
+    # Return uint8 [0, 255] suitable for predictor.set_image
+    return clahe_image_uint8
 
-def resize_with_aspect_ratio(image, target_size=1024):
-    """Resize image to target size while preserving aspect ratio."""
-    if image is None: return None
-    
-    height, width = image.shape[:2]
-    
-    # Calculate scaling factor to maintain aspect ratio
-    r = min(target_size / width, target_size / height)
-    new_width, new_height = int(width * r), int(height * r)
-    
-    # Resize the image
-    return cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
 
 def preprocess_image_for_sam2(image_rgb_numpy):
-    """Combined preprocessing: normalization + CLAHE + Z-score normalization + resizing."""
+    """Combined preprocessing: normalization + CLAHE for SAM2 input."""
     if image_rgb_numpy is None:
         print("Preprocessing: Input image is None.")
         return None
@@ -142,35 +113,14 @@ def preprocess_image_for_sam2(image_rgb_numpy):
 
     start_time_clahe = time.time()
     print("Preprocessing Step 2: Applying CLAHE...")
-    clahe_image = apply_clahe(normalized_uint8) # CLAHE applied here
-    if clahe_image is None:
+    preprocessed_uint8 = apply_clahe(normalized_uint8) # CLAHE applied here
+    if preprocessed_uint8 is None:
         print("Preprocessing failed at CLAHE step.")
         return None
     print(f"CLAHE done in {time.time() - start_time_clahe:.2f}s")
-    
-    # Step 3: Apply Z-score normalization (as done in training)
-    start_time_zscore = time.time()
-    print("Preprocessing Step 3: Applying Z-score normalization...")
-    zscore_normalized = apply_zscore_normalization(clahe_image)
-    if zscore_normalized is None:
-        print("Preprocessing failed at Z-score normalization step.")
-        return None
-    print(f"Z-score normalization done in {time.time() - start_time_zscore:.2f}s")
-    
-    # Step 4: Resize maintaining aspect ratio if needed
-    start_time_resize = time.time()
-    print("Preprocessing Step 4: Resizing image...")
-    if zscore_normalized.shape[0] != 1024 or zscore_normalized.shape[1] != 1024:
-        resized_image = resize_with_aspect_ratio(zscore_normalized, target_size=1024)
-        print(f"Image resized from {zscore_normalized.shape[:2]} to {resized_image.shape[:2]}")
-    else:
-        resized_image = zscore_normalized
-        print("Image already at target size 1024x1024")
-    print(f"Resizing done in {time.time() - start_time_resize:.2f}s")
-    
     print(f"Total preprocessing time: {time.time() - start_time:.2f}s")
-    
-    return resized_image # Return the fully preprocessed image
+
+    return preprocessed_uint8 # Return the image after all steps
 
 # --- Model Loading ---
 

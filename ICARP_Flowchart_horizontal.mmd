@@ -1,0 +1,69 @@
+---
+config:
+  layout: dagre
+---
+flowchart LR
+ subgraph sgPre["Image Preprocessing"]
+    direction LR
+        B1["Intensity Normalization"]
+        B2["CLAHE Enhancement"]
+        B3["Z-score Normalization"]
+        B4["Resize to 1024x1024"]
+        B["Image Preprocessing Module"]
+  end
+ subgraph sgUsr["User Interaction"]
+    direction LR
+        D1["Positive Points for Arteries"]
+        D2["Negative Points for Background"]
+        D["Add Point Prompts"]
+  end
+ subgraph sgSam["SAM2 Segmentation"]
+    direction LR
+        E1["Image Encoder"]
+        E2["Memory Attention"]
+        E3["Prompt Encoder"]
+        E4["Mask Decoder"]
+        E5["Segmented Mask"]
+  end
+    A["User Uploads X-ray Image"] L_A_B_0@--> B
+    B --> B1 & B2 & B3 & B4 & C["Display Preprocessed Image"]
+    C L_C_D_0@<--> D
+    C L_C_E1_0@--> E1
+    D --> D1 & D2 & E3
+    E1 --> E2
+    E2 --> E4
+    E3 --> E4
+    E4 L_E4_E5_0@--> E5
+    E5 L_E5_F_0@--> F["Final Segmentation Mask"]
+     B1:::processNode
+     B2:::processNode
+     B3:::processNode
+     B4:::processNode
+     B:::processNode
+     D1:::userActionNode
+     D2:::userActionNode
+     D:::userActionNode
+     E1:::samNode
+     E2:::samNode
+     E3:::samNode
+     E4:::samNode
+     E5:::samNode
+     A:::startNode
+     C:::displayNode
+     F:::finalOutputNode
+    classDef startNode fill:#e0f7fa,stroke:#00796b,stroke-width:1px,color:#004d40,rx:4,ry:4
+    classDef processNode fill:#e3f2fd,stroke:#1e88e5,stroke-width:1px,color:#0d47a1,rx:4,ry:4
+    classDef displayNode fill:#e8f5e9,stroke:#388e3c,stroke-width:1px,color:#1b5e20,rx:4,ry:4
+    classDef userActionNode fill:#fff9c4,stroke:#fbc02d,stroke-width:1px,color:#f57f17,rx:4,ry:4
+    classDef samNode fill:#ede7f6,stroke:#5e35b1,stroke-width:1px,color:#311b92,rx:4,ry:4
+    classDef finalOutputNode fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,font-weight:bold,rx:4,ry:4
+    style sgPre fill:#f0f8ff,stroke:#add8e6,stroke-width:1px,rx:6,ry:6
+    style sgUsr fill:#fffde7,stroke:#fff59d,stroke-width:1px,rx:6,ry:6
+    style sgSam fill:#f3e5f5,stroke:#ce93d8,stroke-width:1px,rx:6,ry:6
+    L_A_B_0@{ animation: slow } 
+    L_B_C_0@{ animation: fast } 
+    L_C_D_0@{ animation: slow } 
+    L_C_E1_0@{ animation: slow } 
+    L_D_E3_0@{ animation: slow } 
+    L_E4_E5_0@{ animation: slow } 
+    L_E5_F_0@{ animation: slow }

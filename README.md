@@ -2,6 +2,18 @@
 
 This project provides a Gradio interface for segmenting coronary arteries in X-ray images using fine-tuned Segment Anything Model 2 (SAM2) variants.
 
+## Workflow Diagram
+
+The following diagram illustrates the workflow of the coronary artery segmentation process using the fine-tuned SAM2 model:
+
+![Coronary Artery Segmentation Workflow](ICARp_Updated.svg)
+
+The workflow consists of several key stages:
+1. Image preprocessing (normalization, enhancement)
+2. User interaction through point prompts
+3. Processing by fine-tuned SAM2 components
+4. Generation of the final segmentation mask
+
 ## Setup
 
 ### 1. Create Conda Environment

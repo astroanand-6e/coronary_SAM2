@@ -11,10 +11,10 @@ from PIL import Image
 
 # IMPORTANT: Updated paths based on your input
 MODEL_PATHS = {
-    "SAM2_tiny": "/home/administrator/Dev/Anand/SAM2_CASBloDaM/fine_tuned_sam2_hiera_t/best_model.pt",
-    "SAM2_small": "/home/administrator/Dev/Anand/SAM2_CASBloDaM/fine_tuned_sam2_hiera_s/checkpoint_epoch_70.pt",
-    "SAM2_base_plus": "/home/administrator/Dev/Anand/SAM2_CASBloDaM/fine_tuned_sam2_hiera_b+/best_model.pt", # Assuming this path is correct now
-    "SAM2_large": "/home/administrator/Dev/Anand/SAM2_CASBloDaM/fine_tuned_sam2_hiera_l/best_model.pt",   # Assuming this path is correct now
+    "SAM2_tiny": "ft_models/sam2_t/best_model.pt",
+    "SAM2_small": "ft_models/sam2_s/checkpoint_epoch_70.pt",
+    "SAM2_base_plus": "ft_models/sam2_b+/best_model.pt", # Assuming this path is correct now
+    "SAM2_large": "ft_models/sam2_l/final_model.pt",   # Assuming this path is correct now
 }
 
 # Check if model files exist

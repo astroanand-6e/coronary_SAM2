@@ -61,7 +61,8 @@ pip install sam2
 Install Gradio and OpenCV if you haven't already:
 
 ```bash
-pip install gradio opencv-python-headless torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 # Adjust CUDA version if needed
+pip install uv
+uv pip install gradio opencv-python-headless torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu130 # Adjust CUDA version if needed
 ```
 *(Note: Ensure you install the correct PyTorch version for your CUDA setup if using GPU)*
 

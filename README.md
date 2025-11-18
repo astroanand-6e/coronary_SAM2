@@ -2,6 +2,22 @@
 
 This project provides a Gradio interface for segmenting coronary arteries in X-ray images using fine-tuned Segment Anything Model 2 (SAM2) variants.
 
+---
+
+## 🚀 Live Demo
+
+Try out the Coronary Artery Segmentation tool online:  
+👉 [Hugging Face Space (Gradio Demo)](https://huggingface.co/spaces/astroanand/CoronarySAM2_FT)
+
+---
+
+## 🧩 Fine-Tuned Models
+
+All fine-tuned SAM2 model checkpoints are available at:  
+👉 [Hugging Face: astroanand/CoronarySAM2](https://huggingface.co/astroanand/CoronarySAM2)
+
+---
+
 ## Workflow Diagram
 
 The following diagram illustrates the workflow of the coronary artery segmentation process using the fine-tuned SAM2 model:
@@ -67,7 +83,8 @@ pip install gradio opencv-python-headless torch torchvision torchaudio --index-u
 
 ## Running the Application
 
-1.  **Ensure Models are Present:** Make sure the fine-tuned model checkpoints (`.pt` files) are located in the paths specified in `app.py` (e.g., `fine_tuned_sam2_hiera_t/best_model.pt`).
+1.  **Ensure Models are Present:** Make sure the fine-tuned model checkpoints (`.pt` files) are located in the paths specified in `app.py` (e.g., `fine_tuned_sam2_hiera_t/best_model.pt`).  
+    - You can [download the latest fine-tuned models here](https://huggingface.co/astroanand/CoronarySAM2).
 2.  **Activate Environment:** `conda activate sam2_FT_env`
 3.  **Run the App:** `python app.py`
 4.  Open the provided URL (usually `http://127.0.0.1:7860`) in your web browser.
